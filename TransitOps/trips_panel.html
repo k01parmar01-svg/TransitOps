@@ -1,0 +1,70 @@
+        <!-- ========== PAGE: TRIPS (Dispatcher) ========== -->
+        <div id="page-trips" class="page">
+            <!-- Create Trip Panel -->
+            <div class="dispatch-panel">
+                <h4><i class="fas fa-plus-circle" style="color:#3ecf8e;"></i> Create Trip</h4>
+                <div class="row">
+                    <div class="field">
+                        <label><i class="fas fa-map-marker-alt"></i> Source</label>
+                        <input id="tripSource" placeholder="Enter source">
+                    </div>
+                    <div class="field">
+                        <label><i class="fas fa-flag-checkered"></i> Destination</label>
+                        <input id="tripDest" placeholder="Enter destination">
+                    </div>
+                    <div class="field">
+                        <label><i class="fas fa-truck"></i> Vehicle</label>
+                        <select id="tripVehicle"><option value="">Select Vehicle</option></select>
+                    </div>
+                    <div class="field">
+                        <label><i class="fas fa-user"></i> Driver</label>
+                        <select id="tripDriver"><option value="">Select Driver</option></select>
+                    </div>
+                    <div class="field">
+                        <label><i class="fas fa-weight-hanging"></i> Cargo (kg)</label>
+                        <input type="number" id="tripCargo" value="450">
+                    </div>
+                    <div class="field">
+                        <label><i class="fas fa-road"></i> Distance (km)</label>
+                        <input type="number" id="tripDist" value="38">
+                    </div>
+                </div>
+                <div id="tripValidation" style="color:#d9534f;font-size:13px;margin-top:6px;"></div>
+                <div class="flex mt-2">
+                    <button class="btn btn-success" onclick="createAndDispatchTrip()">
+                        <i class="fas fa-paper-plane"></i> Create & Dispatch
+                    </button>
+                    <button class="btn btn-outline" onclick="clearTripForm()">
+                        <i class="fas fa-undo"></i> Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Live Board -->
+            <div class="table-wrap">
+                <div class="header-actions">
+                    <h4><i class="fas fa-clipboard-list"></i> Live Board</h4>
+                    <div style="display:flex;gap:8px;">
+                        <button class="btn btn-primary" onclick="loadTrips()">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                        <button class="btn btn-success" onclick="loadTrips()" style="background:#3ecf8e;">
+                            <i class="fas fa-play"></i> Refresh Now
+                        </button>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Trip ID</th>
+                            <th>Route</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tripTableBody">
+                        <tr><td colspan="4" class="text-muted">Loading trips...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>

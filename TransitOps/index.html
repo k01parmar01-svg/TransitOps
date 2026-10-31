@@ -1,0 +1,1854 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TransitOps - Smart Transport Operations Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #f0f4f8; min-height: 100vh; display: flex; }
+
+        /* ========== LOGIN PAGE ========== */
+        #loginPage {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0b1e33 0%, #1a3a5a 100%);
+        }
+        .login-container {
+            background: #fff;
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .login-container .logo {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #0b1e33;
+            margin-bottom: 8px;
+        }
+        .login-container .logo i { color: #3ecf8e; margin-right: 10px; }
+        .login-container .subtitle {
+            text-align: center;
+            color: #6a7f9a;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+        .login-container .role-badge {
+            text-align: center;
+            font-size: 12px;
+            color: #3a5a7a;
+            margin-bottom: 20px;
+            padding: 8px;
+            background: #f0f4f8;
+            border-radius: 8px;
+        }
+        .login-container .role-badge span {
+            display: inline-block;
+            margin: 0 6px;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .role-fm { background: #dff0e6; color: #1f7b4a; }
+        .role-dp { background: #cce3ff; color: #1a5a9a; }
+        .role-so { background: #ffe0cc; color: #b45a2a; }
+        .role-fa { background: #e8e8e8; color: #6a6a6a; }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #3a5a7a;
+            margin-bottom: 4px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #dce3ec;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: 0.2s;
+            background: #fafcff;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #3ecf8e;
+            box-shadow: 0 0 0 3px rgba(62,207,142,0.1);
+        }
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .form-row label { font-size: 13px; color: #3a5a7a; }
+        .form-row a { font-size: 13px; color: #3ecf8e; text-decoration: none; cursor: pointer; }
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background: #0b1e33;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-primary:hover { background: #1a3a5a; }
+        .btn-secondary {
+            width: 100%;
+            padding: 12px;
+            background: #3ecf8e;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 8px;
+        }
+        .btn-secondary:hover { background: #2db87a; }
+        .error-msg {
+            color: #d9534f;
+            font-size: 13px;
+            margin-top: 8px;
+            display: none;
+            padding: 10px;
+            background: #fde8e8;
+            border-radius: 8px;
+        }
+        .error-msg.show { display: block; }
+        .success-msg {
+            color: #1f7b4a;
+            font-size: 13px;
+            margin-top: 8px;
+            display: none;
+            padding: 10px;
+            background: #dff0e6;
+            border-radius: 8px;
+        }
+        .success-msg.show { display: block; }
+        .login-footer { text-align: center; margin-top: 16px; font-size: 13px; color: #6a7f9a; }
+
+        .tab-buttons {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #dce3ec;
+        }
+        .tab-buttons button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: #f8fafd;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        .tab-buttons button.active {
+            background: #0b1e33;
+            color: #fff;
+        }
+        .tab-buttons button:hover:not(.active) { background: #eef2f7; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .sample-creds {
+            background: #f8fafd;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 16px;
+            font-size: 12px;
+            border: 1px solid #eef2f7;
+        }
+        .sample-creds .cred-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 0;
+            color: #3a5a7a;
+        }
+        .sample-creds .cred-row .role-name { font-weight: 600; color: #0b1e33; }
+        .sample-creds .cred-row .cred-details { color: #6a7f9a; }
+
+        /* ========== MAIN APP ========== */
+        #appPage { display: none; width: 100%; }
+        #appPage.show { display: flex; }
+
+        .sidebar {
+            width: 240px;
+            background: #0b1e33;
+            color: #cfddee;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        .sidebar .logo {
+            padding: 0 20px 30px 20px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            border-bottom: 1px solid #1f3a4f;
+        }
+        .sidebar .logo i { color: #3ecf8e; margin-right: 10px; }
+        .sidebar .user-info {
+            padding: 16px 20px;
+            border-bottom: 1px solid #1f3a4f;
+        }
+        .sidebar .user-info .name { color: #fff; font-weight: 600; }
+        .sidebar .user-info .role { font-size: 12px; color: #3ecf8e; margin-top: 2px; }
+        .sidebar .nav { padding: 20px 0; flex: 1; }
+        .sidebar .nav a {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: #b0c9dd;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.2s;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+        .sidebar .nav a i { width: 24px; margin-right: 12px; font-size: 16px; }
+        .sidebar .nav a:hover, .sidebar .nav a.active {
+            background: #132d44;
+            color: #fff;
+            border-left-color: #3ecf8e;
+        }
+        .sidebar .bottom {
+            padding: 16px 20px;
+            border-top: 1px solid #1f3a4f;
+            font-size: 13px;
+            color: #8aa3bc;
+            cursor: pointer;
+        }
+        .sidebar .bottom:hover { color: #fff; }
+
+        .main {
+            margin-left: 240px;
+            flex: 1;
+            padding: 20px 30px;
+        }
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            background: #fff;
+            padding: 12px 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .topbar h2 { font-weight: 500; font-size: 20px; color: #1a2a3a; }
+        .topbar .actions { display: flex; gap: 16px; align-items: center; }
+        .topbar .badge {
+            background: #3ecf8e;
+            color: #fff;
+            border-radius: 30px;
+            padding: 2px 12px;
+            font-size: 12px;
+        }
+
+        .page { display: none; }
+        .page.active { display: block; }
+
+        /* ========== DASHBOARD KPI CARDS ========== */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .kpi-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 16px 18px;
+            border: 1px solid #eef2f7;
+            position: relative;
+            overflow: hidden;
+        }
+        .kpi-card .label { font-size: 13px; color: #6a7f9a; font-weight: 500; }
+        .kpi-card .value { font-size: 28px; font-weight: 600; color: #0b1e33; margin: 6px 0 4px; }
+        .kpi-card .icon {
+            position: absolute;
+            right: 16px;
+            top: 16px;
+            font-size: 24px;
+            opacity: 0.15;
+        }
+        .kpi-card .change { font-size: 12px; font-weight: 500; }
+        .kpi-card .change.up { color: #3ecf8e; }
+        .kpi-card .change.down { color: #e06b6b; }
+
+        /* ========== FILTERS ========== */
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            background: #fff;
+            padding: 14px 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            align-items: center;
+            border: 1px solid #eef2f7;
+        }
+        .filter-row label { font-size: 13px; font-weight: 500; color: #3a5a7a; margin-right: 4px; }
+        .filter-row select, .filter-row input {
+            border: 1px solid #dce3ec;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 13px;
+            background: #fafcff;
+        }
+
+        /* ========== TABLES ========== */
+        .table-wrap {
+            background: #fff;
+            border-radius: 14px;
+            padding: 16px 0 0 0;
+            border: 1px solid #eef2f7;
+            overflow-x: auto;
+            margin-bottom: 24px;
+        }
+        .table-wrap .header-actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px 14px 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { text-align: left; padding: 12px 16px; background: #f8fafd; color: #3a5a7a; font-weight: 500; border-bottom: 1px solid #eef2f7; }
+        td { padding: 12px 16px; border-bottom: 1px solid #f0f4fa; }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status-badge.available { background: #dff0e6; color: #1f7b4a; }
+        .status-badge.ontrip { background: #cce3ff; color: #1a5a9a; }
+        .status-badge.inshop { background: #ffe0cc; color: #b45a2a; }
+        .status-badge.retired { background: #e8e8e8; color: #6a6a6a; }
+        .status-badge.draft { background: #e8e8e8; color: #6a6a6a; }
+        .status-badge.dispatched { background: #cce3ff; color: #1a5a9a; }
+        .status-badge.completed { background: #dff0e6; color: #1f7b4a; }
+        .status-badge.cancelled { background: #fce1e1; color: #b33a3a; }
+        .status-badge.suspended { background: #fce1e1; color: #b33a3a; }
+
+        .btn {
+            padding: 6px 16px;
+            border: none;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-primary { background: #0b1e33; color: #fff; }
+        .btn-success { background: #3ecf8e; color: #fff; }
+        .btn-danger { background: #e06b6b; color: #fff; }
+        .btn-outline { background: transparent; border: 1px solid #dce3ec; }
+        .btn-sm { padding: 4px 12px; font-size: 12px; }
+
+        .dispatch-panel {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px;
+            border: 1px solid #eef2f7;
+            margin-bottom: 24px;
+        }
+        .dispatch-panel .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: end;
+        }
+        .dispatch-panel .field { flex: 1 0 160px; }
+        .dispatch-panel .field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #3a5a7a;
+            margin-bottom: 4px;
+        }
+        .dispatch-panel .field input, .dispatch-panel .field select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #dce3ec;
+            border-radius: 8px;
+            font-size: 13px;
+            background: #fafcff;
+        }
+
+        .text-muted { color: #6a7f9a; text-align: center; padding: 20px; }
+        .flex { display: flex; gap: 10px; flex-wrap: wrap; }
+        .mt-2 { margin-top: 12px; }
+        .mb-2 { margin-bottom: 12px; }
+
+        /* ========== VEHICLE STATUS INDICATORS ========== */
+        .status-indicators {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .status-indicator {
+            background: #fff;
+            border-radius: 10px;
+            padding: 12px 16px;
+            border: 1px solid #eef2f7;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .status-indicator .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .status-indicator .dot.green { background: #3ecf8e; }
+        .status-indicator .dot.blue { background: #1a5a9a; }
+        .status-indicator .dot.orange { background: #b45a2a; }
+        .status-indicator .dot.gray { background: #6a6a6a; }
+        .status-indicator .dot.red { background: #b33a3a; }
+        .status-indicator .count { font-weight: 600; font-size: 16px; margin-left: auto; }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.show { display: flex; }
+        .modal-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 14px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-content h3 { margin-bottom: 16px; color: #0b1e33; }
+        .modal-content .field { margin-bottom: 12px; }
+        .modal-content .field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #3a5a7a;
+            margin-bottom: 4px;
+        }
+        .modal-content .field input, .modal-content .field select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #dce3ec;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            justify-content: flex-end;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 60px; }
+            .sidebar .logo span { display: none; }
+            .sidebar .nav a span { display: none; }
+            .sidebar .user-info .name { display: none; }
+            .sidebar .user-info .role { display: none; }
+            .main { margin-left: 60px; padding: 16px; }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========== LOGIN PAGE ========== -->
+<div id="loginPage">
+    <div class="login-container">
+        <div class="logo"><i class="fas fa-truck"></i> TransitOps</div>
+        <div class="subtitle">Smart Transport Operations Platform</div>
+        <div class="role-badge">
+            <span class="role-fm">Fleet Manager</span>
+            <span class="role-dp">Dispatcher</span>
+            <span class="role-so">Safety Officer</span>
+            <span class="role-fa">Financial Analyst</span>
+        </div>
+        <div class="sample-creds">
+            <div style="font-weight:600;color:#0b1e33;margin-bottom:4px;">📋 Sample Credentials</div>
+            <div class="cred-row"><span class="role-name">Fleet Manager</span><span class="cred-details">fleet@transitops.in / fleet123</span></div>
+            <div class="cred-row"><span class="role-name">Dispatcher</span><span class="cred-details">dispatch@transitops.in / dispatch123</span></div>
+            <div class="cred-row"><span class="role-name">Safety Officer</span><span class="cred-details">safety@transitops.in / safety123</span></div>
+            <div class="cred-row"><span class="role-name">Financial Analyst</span><span class="cred-details">finance@transitops.in / finance123</span></div>
+        </div>
+        <div class="tab-buttons">
+            <button class="active" onclick="switchTab('login')"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+            <button onclick="switchTab('register')"><i class="fas fa-user-plus"></i> Register</button>
+        </div>
+        <div id="tab-login" class="tab-content active">
+            <div style="text-align:center;font-size:13px;color:#6a7f9a;margin-bottom:16px;">Enter your credentials to continue</div>
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" id="loginEmail" placeholder="Enter your email" value="dispatch@transitops.in">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter your password" value="dispatch123">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-user-tag"></i> Role (RBAC)</label>
+                <select id="loginRole">
+                    <option value="DISPATCHER">Dispatcher</option>
+                    <option value="FLEET_MANAGER">Fleet Manager</option>
+                    <option value="SAFETY_OFFICER">Safety Officer</option>
+                    <option value="FINANCIAL_ANALYST">Financial Analyst</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <label><input type="checkbox" checked> Remember me</label>
+                <a onclick="alert('Contact admin to reset password')">Forgot password?</a>
+            </div>
+            <div id="loginError" class="error-msg">❌ Invalid credentials. Please try again.</div>
+            <button class="btn-primary" onclick="handleLogin()"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+        </div>
+        <div id="tab-register" class="tab-content">
+            <div style="text-align:center;font-size:13px;color:#6a7f9a;margin-bottom:16px;">Create your account</div>
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Full Name</label>
+                <input type="text" id="regName" placeholder="Enter your full name">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" id="regEmail" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <input type="password" id="regPassword" placeholder="Create a password">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-user-tag"></i> Role</label>
+                <select id="regRole">
+                    <option value="FLEET_MANAGER">Fleet Manager</option>
+                    <option value="DISPATCHER">Dispatcher</option>
+                    <option value="SAFETY_OFFICER">Safety Officer</option>
+                    <option value="FINANCIAL_ANALYST">Financial Analyst</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-building"></i> Department</label>
+                <input type="text" id="regDepartment" placeholder="Your department">
+            </div>
+            <div id="regSuccess" class="success-msg">✅ Registration successful! Please login.</div>
+            <div id="regError" class="error-msg">❌ Registration failed. Please try again.</div>
+            <button class="btn-secondary" onclick="handleRegister()"><i class="fas fa-user-plus"></i> Create Account</button>
+        </div>
+        <div class="login-footer">Access is scoped by role after login</div>
+    </div>
+</div>
+
+<!-- ========== MAIN APP ========== -->
+<div id="appPage">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo"><i class="fas fa-truck"></i> <span>TransitOps</span></div>
+        <div class="user-info">
+            <div class="name" id="userName">User</div>
+            <div class="role" id="userRole">Role</div>
+        </div>
+        <div class="nav" id="sidebarNav"></div>
+        <div class="bottom" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="topbar">
+            <h2 id="pageTitle">Dashboard</h2>
+            <div class="actions">
+                <i class="fas fa-bell"></i>
+                <span class="badge" id="roleBadge">Role</span>
+            </div>
+        </div>
+
+        <!-- ========== PAGE: DASHBOARD (Shared) ========== -->
+        <div id="page-dashboard" class="page active">
+            <div class="filter-row">
+                <label>Vehicle Type:</label>
+                <select id="filterType"><option>All</option><option>Van</option><option>Truck</option><option>Mini</option></select>
+                <label>Status:</label>
+                <select id="filterStatus"><option>All</option><option>Available</option><option>On Trip</option><option>In Shop</option><option>Retired</option></select>
+                <label>Region:</label>
+                <select id="filterRegion"><option>All</option><option>North</option><option>South</option><option>East</option><option>West</option></select>
+            </div>
+
+            <div class="kpi-grid" id="kpiGrid">
+                <div class="kpi-card">
+                    <i class="fas fa-truck icon"></i>
+                    <div class="label">Active Vehicles</div>
+                    <div class="value" id="kpiActiveVehicles">-</div>
+                    <span class="change up">↑ 12%</span>
+                </div>
+                <div class="kpi-card">
+                    <i class="fas fa-parking icon"></i>
+                    <div class="label">Available Vehicles</div>
+                    <div class="value" id="kpiAvailableVehicles">-</div>
+                    <span class="change down">↓ 5%</span>
+                </div>
+                <div class="kpi-card">
+                    <i class="fas fa-tools icon"></i>
+                    <div class="label">In Maintenance</div>
+                    <div class="value" id="kpiInMaintenance">-</div>
+                    <span class="change up">↑ 2%</span>
+                </div>
+                <div class="kpi-card">
+                    <i class="fas fa-route icon"></i>
+                    <div class="label">Active Trips</div>
+                    <div class="value" id="kpiActiveTrips">-</div>
+                    <span class="change up">↑ 8%</span>
+                </div>
+                <div class="kpi-card">
+                    <i class="fas fa-clock icon"></i>
+                    <div class="label">Pending Trips</div>
+                    <div class="value" id="kpiPendingTrips">-</div>
+                    <span class="change down">↓ 3%</span>
+                </div>
+                <div class="kpi-card">
+                    <i class="fas fa-users icon"></i>
+                    <div class="label">Drivers On Duty</div>
+                    <div class="value" id="kpiDriversOnDuty">-</div>
+                    <span class="change up">↑ 6%</span>
+                </div>
+                <div class="kpi-card">
+                    <i class="fas fa-chart-line icon"></i>
+                    <div class="label">Fleet Utilization</div>
+                    <div class="value" id="kpiUtilization">-</div>
+                    <span class="change up">↑ 4%</span>
+                </div>
+            </div>
+
+            <div class="status-indicators">
+                <div class="status-indicator">
+                    <span class="dot green"></span> Available
+                    <span class="count" id="statusAvailable">0</span>
+                </div>
+                <div class="status-indicator">
+                    <span class="dot blue"></span> On Trip
+                    <span class="count" id="statusOnTrip">0</span>
+                </div>
+                <div class="status-indicator">
+                    <span class="dot orange"></span> In Shop
+                    <span class="count" id="statusInShop">0</span>
+                </div>
+                <div class="status-indicator">
+                    <span class="dot gray"></span> Retired
+                    <span class="count" id="statusRetired">0</span>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <div class="header-actions">
+                    <h4><i class="fas fa-clock"></i> Recent Trips</h4>
+                    <button class="btn btn-primary btn-sm" onclick="navigateTo('trips')">
+                        <i class="fas fa-plus"></i> New Trip
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Trip ID</th>
+                            <th>Vehicle</th>
+                            <th>Driver</th>
+                            <th>Status</th>
+                            <th>ETA</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentTripsBody">
+                        <tr><td colspan="5" class="text-muted">Loading trips...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========== PAGE: FLEET (Fleet Manager) ========== -->
+        <div id="page-fleet" class="page">
+            <div class="filter-row">
+                <label>Search:</label>
+                <input type="text" placeholder="Reg No / Model" id="fleetSearch">
+                <label>Status:</label>
+                <select id="fleetStatusFilter">
+                    <option>All</option><option>Available</option><option>On Trip</option><option>In Shop</option><option>Retired</option>
+                </select>
+                <button class="btn btn-success" onclick="openModal('vehicle')">
+                    <i class="fas fa-plus"></i> Add Vehicle
+                </button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Reg No</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Capacity</th>
+                            <th>Odometer</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fleetTableBody">
+                        <tr><td colspan="7" class="text-muted">Loading vehicles...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========== PAGE: DRIVERS (Safety Officer) ========== -->
+        <div id="page-drivers" class="page">
+            <div class="filter-row">
+                <input type="text" placeholder="Search drivers..." id="driverSearch">
+                <button class="btn btn-success" onclick="openModal('driver')">
+                    <i class="fas fa-plus"></i> Add Driver
+                </button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>License No</th>
+                            <th>Expiry</th>
+                            <th>Safety</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="driverTableBody">
+                        <tr><td colspan="6" class="text-muted">Loading drivers...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========== PAGE: TRIPS (Dispatcher) - FIXED ========== -->
+        <div id="page-trips" class="page">
+            <div class="dispatch-panel">
+                <h4><i class="fas fa-plus-circle" style="color:#3ecf8e;"></i> Create Trip</h4>
+                <div class="row">
+                    <div class="field">
+                        <label><i class="fas fa-map-marker-alt"></i> Source</label>
+                        <input id="tripSource" placeholder="Enter source">
+                    </div>
+                    <div class="field">
+                        <label><i class="fas fa-flag-checkered"></i> Destination</label>
+                        <input id="tripDest" placeholder="Enter destination">
+                    </div>
+                    <div class="field">
+                        <label><i class="fas fa-truck"></i> Vehicle</label>
+                        <select id="tripVehicle"><option value="">Select Vehicle</option></select>
+                    </div>
+                    <div class="field">
+                        <label><i class="fas fa-user"></i> Driver</label>
+                        <select id="tripDriver"><option value="">Select Driver</option></select>
+                    </div>
+                    <div class="field">
+                        <label><i class="fas fa-weight-hanging"></i> Cargo (kg)</label>
+                        <input type="number" id="tripCargo" value="450">
+                    </div>
+                    <div class="field">
+                        <label><i class="fas fa-road"></i> Distance (km)</label>
+                        <input type="number" id="tripDist" value="38">
+                    </div>
+                </div>
+                <div id="tripValidation" style="color:#d9534f;font-size:13px;margin-top:6px;"></div>
+                <div class="flex mt-2">
+                    <button class="btn btn-success" onclick="createAndDispatchTrip()">
+                        <i class="fas fa-paper-plane"></i> Create & Dispatch
+                    </button>
+                    <button class="btn btn-outline" onclick="clearTripForm()">
+                        <i class="fas fa-undo"></i> Clear
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <div class="header-actions">
+                    <h4><i class="fas fa-clipboard-list"></i> Live Board</h4>
+                    <div style="display:flex;gap:8px;">
+                        <button class="btn btn-primary" onclick="loadTrips()">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                        <button class="btn btn-success" onclick="loadTrips()" style="background:#3ecf8e;">
+                            <i class="fas fa-play"></i> Refresh Now
+                        </button>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Trip ID</th>
+                            <th>Route</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tripTableBody">
+                        <tr><td colspan="4" class="text-muted">Loading trips...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========== PAGE: MAINTENANCE ========== -->
+        <div id="page-maintenance" class="page">
+            <div class="filter-row">
+                <button class="btn btn-success" onclick="openModal('maintenance')">
+                    <i class="fas fa-plus"></i> New Maintenance
+                </button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Vehicle</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Cost</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="maintenanceTableBody">
+                        <tr><td colspan="6" class="text-muted">Loading maintenance...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========== PAGE: FUEL & EXPENSES ========== -->
+        <div id="page-fuel" class="page">
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <i class="fas fa-gas-pump icon"></i>
+                    <div class="label">Total Fuel Cost</div>
+                    <div class="value" id="fuelTotalCost">₹0</div>
+                </div>
+                <div class="kpi-card">
+                    <i class="fas fa-receipt icon"></i>
+                    <div class="label">Total Expenses</div>
+                    <div class="value" id="fuelTotalExpenses">₹0</div>
+                </div>
+                <div class="kpi-card">
+                    <i class="fas fa-coins icon"></i>
+                    <div class="label">Operational Cost</div>
+                    <div class="value" id="fuelOpCost">₹0</div>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <div class="header-actions">
+                    <h4><i class="fas fa-gas-pump"></i> Fuel Logs</h4>
+                    <button class="btn btn-success" onclick="openModal('fuel')">
+                        <i class="fas fa-plus"></i> Add Fuel Log
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Vehicle</th>
+                            <th>Liters</th>
+                            <th>Cost</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fuelTableBody">
+                        <tr><td colspan="4" class="text-muted">No fuel logs found</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========== PAGE: ANALYTICS ========== -->
+        <div id="page-analytics" class="page">
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <i class="fas fa-chart-pie icon"></i>
+                    <div class="label">Fleet Utilization</div>
+                    <div class="value" id="anaUtilization">0%</div>
+                </div>
+                <div class="kpi-card">
+                    <i class="fas fa-money-bill-wave icon"></i>
+                    <div class="label">Operational Cost</div>
+                    <div class="value" id="anaCost">₹0</div>
+                </div>
+                <div class="kpi-card">
+                    <i class="fas fa-truck icon"></i>
+                    <div class="label">Total Vehicles</div>
+                    <div class="value" id="anaVehicles">0</div>
+                </div>
+                <div class="kpi-card">
+                    <i class="fas fa-users icon"></i>
+                    <div class="label">Total Drivers</div>
+                    <div class="value" id="anaDrivers">0</div>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <div class="header-actions">
+                    <h4><i class="fas fa-chart-bar"></i> Vehicle ROI</h4>
+                    <button class="btn btn-primary" onclick="exportCSV()">
+                        <i class="fas fa-file-export"></i> Export CSV
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Vehicle</th>
+                            <th>Revenue</th>
+                            <th>Cost</th>
+                            <th>ROI</th>
+                        </tr>
+                    </thead>
+                    <tbody id="roiTableBody">
+                        <tr><td colspan="4" class="text-muted">No ROI data available</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========== PAGE: COMPLIANCE ========== -->
+        <div id="page-compliance" class="page">
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <i class="fas fa-users icon"></i>
+                    <div class="label">Total Drivers</div>
+                    <div class="value" id="compTotalDrivers">0</div>
+                </div>
+                <div class="kpi-card">
+                    <i class="fas fa-exclamation-triangle icon" style="color:#e06b6b;"></i>
+                    <div class="label">Licenses Expiring Soon</div>
+                    <div class="value" id="compExpiring">0</div>
+                </div>
+                <div class="kpi-card">
+                    <i class="fas fa-ban icon" style="color:#e06b6b;"></i>
+                    <div class="label">Suspended Drivers</div>
+                    <div class="value" id="compSuspended">0</div>
+                </div>
+                <div class="kpi-card">
+                    <i class="fas fa-shield-alt icon" style="color:#3ecf8e;"></i>
+                    <div class="label">Avg Safety Score</div>
+                    <div class="value" id="compAvgSafety">0%</div>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <div class="header-actions">
+                    <h4><i class="fas fa-clipboard-list"></i> Driver Compliance Report</h4>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Driver</th>
+                            <th>License No</th>
+                            <th>Expiry</th>
+                            <th>Safety Score</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="complianceTableBody">
+                        <tr><td colspan="5" class="text-muted">Loading drivers...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== MODAL ========== -->
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <h3 id="modalTitle">Add</h3>
+        <div id="modalBody"></div>
+        <div class="modal-actions">
+            <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-success" id="modalSubmit">Save</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script>
+// ============================================================
+// CONFIGURATION
+// ============================================================
+const API_BASE = 'http://localhost:8080';
+let currentUser = null;
+let currentRole = '';
+
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+function switchTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-buttons button').forEach(b => b.classList.remove('active'));
+    document.getElementById(`tab-${tab}`).classList.add('active');
+    if (tab === 'login') {
+        document.querySelector('.tab-buttons button:first-child').classList.add('active');
+    } else {
+        document.querySelector('.tab-buttons button:last-child').classList.add('active');
+    }
+    document.getElementById('loginError').classList.remove('show');
+    document.getElementById('regError').classList.remove('show');
+    document.getElementById('regSuccess').classList.remove('show');
+}
+
+// ============================================================
+// LOGIN
+// ============================================================
+const roleCredentials = {
+    'FLEET_MANAGER': { email: 'fleet@transitops.in', password: 'fleet123' },
+    'DISPATCHER': { email: 'dispatch@transitops.in', password: 'dispatch123' },
+    'SAFETY_OFFICER': { email: 'safety@transitops.in', password: 'safety123' },
+    'FINANCIAL_ANALYST': { email: 'finance@transitops.in', password: 'finance123' }
+};
+
+function handleLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
+    const role = document.getElementById('loginRole').value;
+
+    const creds = roleCredentials[role];
+    if (email === creds.email && password === creds.password) {
+        currentUser = { email, name: getRoleName(role), role: role };
+        currentRole = role;
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('appPage').classList.add('show');
+        document.getElementById('appPage').style.display = 'flex';
+        initApp();
+    } else {
+        const error = document.getElementById('loginError');
+        error.textContent = '❌ Invalid credentials. Please try again.';
+        error.classList.add('show');
+    }
+}
+
+function getRoleName(role) {
+    const names = {
+        'FLEET_MANAGER': 'Fleet Manager',
+        'DISPATCHER': 'Dispatcher',
+        'SAFETY_OFFICER': 'Safety Officer',
+        'FINANCIAL_ANALYST': 'Financial Analyst'
+    };
+    return names[role] || role;
+}
+
+function logout() {
+    currentUser = null;
+    currentRole = '';
+    document.getElementById('loginPage').style.display = 'flex';
+    document.getElementById('appPage').classList.remove('show');
+    document.getElementById('appPage').style.display = 'none';
+}
+
+// ============================================================
+// REGISTER
+// ============================================================
+async function handleRegister() {
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value.trim();
+    const role = document.getElementById('regRole').value;
+    const department = document.getElementById('regDepartment').value.trim();
+
+    if (!name || !email || !password || !department) {
+        document.getElementById('regError').textContent = '❌ Please fill all fields.';
+        document.getElementById('regError').classList.add('show');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/api/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password, department })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            document.getElementById('regSuccess').textContent = '✅ Registration successful! Please login.';
+            document.getElementById('regSuccess').classList.add('show');
+            document.getElementById('regError').classList.remove('show');
+            document.getElementById('loginEmail').value = email;
+            document.getElementById('loginPassword').value = password;
+            document.getElementById('loginRole').value = role;
+            setTimeout(() => switchTab('login'), 1500);
+        } else {
+            document.getElementById('regError').textContent = '❌ ' + (data.error || 'Registration failed.');
+            document.getElementById('regError').classList.add('show');
+        }
+    } catch (e) {
+        document.getElementById('regError').textContent = '❌ Server error. Please try again.';
+        document.getElementById('regError').classList.add('show');
+    }
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+const roleNavItems = {
+    'FLEET_MANAGER': [
+        { id: 'dashboard', icon: 'fa-chart-pie', label: 'Dashboard' },
+        { id: 'fleet', icon: 'fa-car', label: 'Fleet' },
+        { id: 'maintenance', icon: 'fa-tools', label: 'Maintenance' },
+        { id: 'analytics', icon: 'fa-chart-line', label: 'Analytics' }
+    ],
+    'DISPATCHER': [
+        { id: 'dashboard', icon: 'fa-chart-pie', label: 'Dashboard' },
+        { id: 'trips', icon: 'fa-route', label: 'Trips' }
+    ],
+    'SAFETY_OFFICER': [
+        { id: 'dashboard', icon: 'fa-chart-pie', label: 'Dashboard' },
+        { id: 'drivers', icon: 'fa-id-card', label: 'Drivers' },
+        { id: 'compliance', icon: 'fa-shield-alt', label: 'Compliance' }
+    ],
+    'FINANCIAL_ANALYST': [
+        { id: 'dashboard', icon: 'fa-chart-pie', label: 'Dashboard' },
+        { id: 'fuel', icon: 'fa-gas-pump', label: 'Fuel & Expenses' },
+        { id: 'analytics', icon: 'fa-chart-line', label: 'Analytics' }
+    ]
+};
+
+const pageTitles = {
+    dashboard: 'Dashboard',
+    fleet: 'Fleet Management',
+    drivers: 'Driver Management',
+    trips: 'Trip Management',
+    maintenance: 'Maintenance',
+    analytics: 'Analytics',
+    compliance: 'Compliance Report',
+    fuel: 'Fuel & Expenses'
+};
+
+let refreshInterval = null;
+
+function initApp() {
+    document.getElementById('userName').textContent = currentUser.name;
+    document.getElementById('userRole').textContent = getRoleName(currentRole);
+    document.getElementById('roleBadge').textContent = getRoleName(currentRole);
+    buildSidebar();
+    loadDashboard();
+    loadTripOptions();
+    // Start auto-refresh for trips if dispatcher
+    if (currentRole === 'DISPATCHER') {
+        startAutoRefresh();
+    }
+}
+
+function buildSidebar() {
+    const nav = document.getElementById('sidebarNav');
+    const items = roleNavItems[currentRole] || roleNavItems['DISPATCHER'];
+    nav.innerHTML = items.map(item => `
+        <a data-page="${item.id}" class="${item.id === 'dashboard' ? 'active' : ''}" onclick="navigateTo('${item.id}')">
+            <i class="fas ${item.icon}"></i> <span>${item.label}</span>
+        </a>
+    `).join('');
+    const allowedPages = items.map(i => i.id);
+    document.querySelectorAll('.page').forEach(p => {
+        const id = p.id.replace('page-', '');
+        p.style.display = allowedPages.includes(id) ? '' : 'none';
+    });
+}
+
+function navigateTo(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const target = document.getElementById(`page-${pageId}`);
+    if (target) target.classList.add('active');
+    document.querySelectorAll('.sidebar .nav a').forEach(a => a.classList.remove('active'));
+    const link = document.querySelector(`.sidebar .nav a[data-page="${pageId}"]`);
+    if (link) link.classList.add('active');
+    document.getElementById('pageTitle').textContent = pageTitles[pageId] || pageId;
+    loadPageData(pageId);
+}
+
+function startAutoRefresh() {
+    if (refreshInterval) clearInterval(refreshInterval);
+    refreshInterval = setInterval(() => {
+        const activePage = document.querySelector('.page.active');
+        if (activePage && activePage.id === 'page-trips') {
+            loadTrips();
+        }
+    }, 10000);
+}
+
+// ============================================================
+// API HELPERS
+// ============================================================
+async function fetchAPI(url) {
+    try {
+        const res = await fetch(url);
+        return await res.json();
+    } catch (e) {
+        console.error('API Error:', e);
+        return null;
+    }
+}
+
+async function postAPI(url, data) {
+    try {
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        return await res.json();
+    } catch (e) {
+        console.error('API Error:', e);
+        return null;
+    }
+}
+
+// ============================================================
+// LOAD PAGE DATA
+// ============================================================
+function loadPageData(pageId) {
+    switch(pageId) {
+        case 'dashboard': loadDashboard(); break;
+        case 'fleet': loadVehicles(); break;
+        case 'drivers': loadDrivers(); break;
+        case 'trips': loadTrips(); loadTripOptions(); break;
+        case 'maintenance': loadMaintenance(); break;
+        case 'analytics': loadAnalytics(); break;
+        case 'compliance': loadCompliance(); break;
+        case 'fuel': loadFuelLogs(); break;
+    }
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+async function loadDashboard() {
+    const data = await fetchAPI(`${API_BASE}/api/dashboard`);
+    const vehicles = await fetchAPI(`${API_BASE}/api/fleet/vehicles`);
+    const trips = await fetchAPI(`${API_BASE}/api/trips`);
+    const drivers = await fetchAPI(`${API_BASE}/api/fleet/drivers`);
+    
+    if (data) {
+        document.getElementById('kpiActiveVehicles').textContent = data.activeVehicles || 0;
+        document.getElementById('kpiAvailableVehicles').textContent = data.availableVehicles || 0;
+        document.getElementById('kpiInMaintenance').textContent = data.vehiclesInMaintenance || 0;
+        document.getElementById('kpiActiveTrips').textContent = data.activeTrips || 0;
+        document.getElementById('kpiDriversOnDuty').textContent = data.driversOnDuty || 0;
+        document.getElementById('kpiUtilization').textContent = (data.fleetUtilization || 0) + '%';
+        if (trips) {
+            const pending = trips.filter(t => t.status === 'DRAFT').length;
+            document.getElementById('kpiPendingTrips').textContent = pending;
+        }
+    }
+    
+    if (vehicles) {
+        document.getElementById('statusAvailable').textContent = vehicles.filter(v => v.status === 'AVAILABLE').length;
+        document.getElementById('statusOnTrip').textContent = vehicles.filter(v => v.status === 'ON_TRIP').length;
+        document.getElementById('statusInShop').textContent = vehicles.filter(v => v.status === 'IN_SHOP').length;
+        document.getElementById('statusRetired').textContent = vehicles.filter(v => v.status === 'RETIRED').length;
+    }
+    
+    loadRecentTrips();
+}
+
+async function loadRecentTrips() {
+    const trips = await fetchAPI(`${API_BASE}/api/trips`);
+    const vehicles = await fetchAPI(`${API_BASE}/api/fleet/vehicles`);
+    const drivers = await fetchAPI(`${API_BASE}/api/fleet/drivers`);
+    const body = document.getElementById('recentTripsBody');
+    
+    if (trips && trips.length > 0) {
+        const recent = trips.slice(0, 5);
+        body.innerHTML = recent.map(t => {
+            const vehicle = vehicles ? vehicles.find(v => v.id === t.vehicleId) : null;
+            const driver = drivers ? drivers.find(d => d.id === t.driverId) : null;
+            return `
+                <tr>
+                    <td><strong>${t.tripId || 'N/A'}</strong></td>
+                    <td>${vehicle ? vehicle.name : t.vehicleId || '-'}</td>
+                    <td>${driver ? driver.name : t.driverId || '-'}</td>
+                    <td><span class="status-badge ${(t.status || 'draft').toLowerCase()}">${t.status || 'DRAFT'}</span></td>
+                    <td>${t.dispatchedAt ? '45 min' : '--'}</td>
+                </tr>
+            `;
+        }).join('');
+    } else {
+        body.innerHTML = '<tr><td colspan="5" class="text-muted">No trips found</td></tr>';
+    }
+}
+
+// ============================================================
+// FLEET
+// ============================================================
+async function loadVehicles() {
+    const data = await fetchAPI(`${API_BASE}/api/fleet/vehicles`);
+    const body = document.getElementById('fleetTableBody');
+    if (data && data.length > 0) {
+        body.innerHTML = data.map(v => `
+            <tr>
+                <td><strong>${v.registrationNumber || 'N/A'}</strong></td>
+                <td>${v.name || 'N/A'}</td>
+                <td>${v.type || 'N/A'}</td>
+                <td>${v.maxLoadCapacity || 0} kg</td>
+                <td>${v.odometer || 0}</td>
+                <td><span class="status-badge ${(v.status || 'available').toLowerCase().replace(' ', '')}">${v.status || 'AVAILABLE'}</span></td>
+                <td><button class="btn btn-danger btn-sm" onclick="deleteVehicle(${v.id})"><i class="fas fa-trash"></i></button></td>
+            </tr>
+        `).join('');
+    } else {
+        body.innerHTML = '<tr><td colspan="7" class="text-muted">No vehicles found</td></tr>';
+    }
+}
+
+async function deleteVehicle(id) {
+    if (confirm('Delete this vehicle?')) {
+        await fetch(`${API_BASE}/api/fleet/vehicles/${id}`, { method: 'DELETE' });
+        loadVehicles();
+    }
+}
+
+// ============================================================
+// DRIVERS
+// ============================================================
+async function loadDrivers() {
+    const data = await fetchAPI(`${API_BASE}/api/fleet/drivers`);
+    const body = document.getElementById('driverTableBody');
+    if (data && data.length > 0) {
+        body.innerHTML = data.map(d => `
+            <tr>
+                <td><strong>${d.name || 'N/A'}</strong></td>
+                <td>${d.licenseNumber || 'N/A'}</td>
+                <td>${d.licenseExpiryDate || 'N/A'}</td>
+                <td>${d.safetyScore || 100}%</td>
+                <td><span class="status-badge ${(d.status || 'available').toLowerCase().replace(' ', '')}">${d.status || 'AVAILABLE'}</span></td>
+                <td><button class="btn btn-danger btn-sm" onclick="deleteDriver(${d.id})"><i class="fas fa-trash"></i></button></td>
+            </tr>
+        `).join('');
+    } else {
+        body.innerHTML = '<tr><td colspan="6" class="text-muted">No drivers found</td></tr>';
+    }
+}
+
+async function deleteDriver(id) {
+    if (confirm('Delete this driver?')) {
+        await fetch(`${API_BASE}/api/fleet/drivers/${id}`, { method: 'DELETE' });
+        loadDrivers();
+    }
+}
+
+// ============================================================
+// TRIPS - MAIN DISPATCHER FUNCTIONS
+// ============================================================
+async function loadTrips() {
+    const body = document.getElementById('tripTableBody');
+    body.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:#6a7f9a;"><i class="fas fa-spinner fa-spin"></i> Loading trips...</td></tr>';
+    
+    const data = await fetchAPI(`${API_BASE}/api/trips`);
+    
+    if (data && data.length > 0) {
+        body.innerHTML = data.map(t => {
+            const statusClass = (t.status || 'draft').toLowerCase();
+            let actions = '';
+            if (t.status === 'DRAFT') {
+                actions = `
+                    <button class="btn btn-primary btn-sm" onclick="dispatchTrip(${t.id})" title="Dispatch this trip">
+                        <i class="fas fa-rocket"></i> Dispatch
+                    </button>
+                    <button class="btn btn-danger btn-sm" onclick="cancelTrip(${t.id})" title="Cancel this trip">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+            } else if (t.status === 'DISPATCHED') {
+                actions = `
+                    <button class="btn btn-success btn-sm" onclick="completeTrip(${t.id})" title="Complete this trip">
+                        <i class="fas fa-check"></i> Complete
+                    </button>
+                    <button class="btn btn-danger btn-sm" onclick="cancelTrip(${t.id})" title="Cancel this trip">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+            } else if (t.status === 'COMPLETED') {
+                actions = `<span style="color:#28a745;font-weight:500;"><i class="fas fa-check-circle"></i> Completed</span>`;
+            } else if (t.status === 'CANCELLED') {
+                actions = `<span style="color:#dc3545;font-weight:500;"><i class="fas fa-times-circle"></i> Cancelled</span>`;
+            }
+            return `
+                <tr>
+                    <td><strong>${t.tripId || 'N/A'}</strong></td>
+                    <td>
+                        <i class="fas fa-flag" style="color:#3ecf8e;font-size:12px;"></i>
+                        ${t.source || ''}
+                        <i class="fas fa-arrow-right" style="color:#3ecf8e;font-size:12px;margin:0 6px;"></i>
+                        <i class="fas fa-flag-checkered" style="color:#3ecf8e;font-size:12px;"></i>
+                        ${t.destination || ''}
+                    </td>
+                    <td><span class="status-badge ${statusClass}">${t.status || 'DRAFT'}</span></td>
+                    <td><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">${actions}</div></td>
+                </tr>
+            `;
+        }).join('');
+    } else {
+        body.innerHTML = `
+            <tr>
+                <td colspan="4" style="text-align:center;padding:30px;color:#6a7f9a;">
+                    <i class="fas fa-inbox" style="font-size:32px;display:block;margin-bottom:10px;color:#dce3ec;"></i>
+                    No trips found. Create your first trip!
+                </td>
+            </tr>
+        `;
+    }
+}
+
+async function loadTripOptions() {
+    const vehicles = await fetchAPI(`${API_BASE}/api/fleet/vehicles`);
+    const drivers = await fetchAPI(`${API_BASE}/api/fleet/drivers`);
+    
+    const vSelect = document.getElementById('tripVehicle');
+    if (vehicles && vehicles.length > 0) {
+        vSelect.innerHTML = '<option value="">Select Vehicle</option>' + 
+            vehicles.map(v => `<option value="${v.id}">${v.name} - ${v.maxLoadCapacity} kg</option>`).join('');
+    }
+    
+    const dSelect = document.getElementById('tripDriver');
+    if (drivers && drivers.length > 0) {
+        dSelect.innerHTML = '<option value="">Select Driver</option>' + 
+            drivers.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+    }
+}
+
+async function createAndDispatchTrip() {
+    const source = document.getElementById('tripSource').value.trim();
+    const destination = document.getElementById('tripDest').value.trim();
+    const vehicleId = document.getElementById('tripVehicle').value;
+    const driverId = document.getElementById('tripDriver').value;
+    const cargoWeight = parseFloat(document.getElementById('tripCargo').value);
+    const plannedDistance = parseFloat(document.getElementById('tripDist').value);
+
+    if (!source || !destination || !vehicleId || !driverId) {
+        document.getElementById('tripValidation').innerHTML = '<i class="fas fa-exclamation-circle"></i> Please fill all fields';
+        return;
+    }
+
+    const tripData = { source, destination, cargoWeight, plannedDistance, vehicleId: parseInt(vehicleId), driverId: parseInt(driverId) };
+    
+    try {
+        const result = await postAPI(`${API_BASE}/api/trips`, tripData);
+        if (result && result.id) {
+            document.getElementById('tripValidation').innerHTML = '<i class="fas fa-check-circle" style="color:#3ecf8e;"></i> Trip created! Dispatching...';
+            await dispatchTrip(result.id);
+            loadTrips();
+            clearTripForm();
+            document.getElementById('tripValidation').innerHTML = '<i class="fas fa-check-circle" style="color:#3ecf8e;"></i> Trip created and dispatched successfully!';
+            setTimeout(() => { document.getElementById('tripValidation').innerHTML = ''; }, 3000);
+        }
+    } catch (e) {
+        document.getElementById('tripValidation').innerHTML = '<i class="fas fa-exclamation-circle"></i> Error creating trip';
+    }
+}
+
+async function dispatchTrip(id) {
+    try {
+        const button = document.querySelector(`button[onclick*="dispatchTrip(${id})"]`);
+        if (button) {
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Dispatching...';
+            button.disabled = true;
+        }
+        
+        const response = await fetch(`${API_BASE}/api/trips/${id}/dispatch`, { method: 'POST' });
+        if (response.ok) {
+            showToast('✅ Trip dispatched successfully!', 'success');
+            loadTrips();
+            loadDashboard();
+        } else {
+            const error = await response.json();
+            showToast('❌ ' + (error.error || 'Failed to dispatch trip'), 'error');
+        }
+    } catch (e) {
+        showToast('❌ Error dispatching trip', 'error');
+    } finally {
+        const button = document.querySelector(`button[onclick*="dispatchTrip(${id})"]`);
+        if (button) {
+            button.innerHTML = '<i class="fas fa-rocket"></i> Dispatch';
+            button.disabled = false;
+        }
+    }
+}
+
+async function completeTrip(id) {
+    const dist = prompt('Enter actual distance (km):');
+    if (dist && !isNaN(dist) && parseFloat(dist) > 0) {
+        try {
+            const response = await fetch(`${API_BASE}/api/trips/${id}/complete?actualDistance=${dist}`, { method: 'POST' });
+            if (response.ok) {
+                showToast('✅ Trip completed successfully!', 'success');
+                loadTrips();
+                loadDashboard();
+            } else {
+                const error = await response.json();
+                showToast('❌ ' + (error.error || 'Failed to complete trip'), 'error');
+            }
+        } catch (e) {
+            showToast('❌ Error completing trip', 'error');
+        }
+    }
+}
+
+async function cancelTrip(id) {
+    if (confirm('Are you sure you want to cancel this trip?')) {
+        try {
+            const response = await fetch(`${API_BASE}/api/trips/${id}/cancel`, { method: 'POST' });
+            if (response.ok) {
+                showToast('✅ Trip cancelled successfully!', 'success');
+                loadTrips();
+                loadDashboard();
+            } else {
+                const error = await response.json();
+                showToast('❌ ' + (error.error || 'Failed to cancel trip'), 'error');
+            }
+        } catch (e) {
+            showToast('❌ Error cancelling trip', 'error');
+        }
+    }
+}
+
+function clearTripForm() {
+    document.getElementById('tripSource').value = '';
+    document.getElementById('tripDest').value = '';
+    document.getElementById('tripCargo').value = '450';
+    document.getElementById('tripDist').value = '38';
+    document.getElementById('tripValidation').innerHTML = '';
+}
+
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    const colors = { success: '#3ecf8e', error: '#e06b6b', info: '#0b1e33' };
+    toast.style.cssText = `
+        position: fixed; bottom: 20px; right: 20px;
+        background: ${colors[type] || colors.info}; color: #fff;
+        padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 500;
+        z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        animation: slideIn 0.3s ease; max-width: 400px;
+    `;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+const styleSheet = document.createElement("style");
+styleSheet.textContent = `
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+`;
+document.head.appendChild(styleSheet);
+
+// ============================================================
+// MAINTENANCE
+// ============================================================
+async function loadMaintenance() {
+    const data = await fetchAPI(`${API_BASE}/api/maintenance`);
+    const body = document.getElementById('maintenanceTableBody');
+    if (data && data.length > 0) {
+        body.innerHTML = data.map(m => `
+            <tr>
+                <td>Vehicle ${m.vehicleId}</td>
+                <td>${m.type || 'N/A'}</td>
+                <td>${m.date || 'N/A'}</td>
+                <td>₹${m.cost || 0}</td>
+                <td><span class="status-badge ${m.status === 'COMPLETED' ? 'completed' : 'inshop'}">${m.status || 'ACTIVE'}</span></td>
+                <td>${m.status === 'ACTIVE' ? `<button class="btn btn-success btn-sm" onclick="completeMaintenance(${m.id})"><i class="fas fa-check"></i> Complete</button>` : ''}</td>
+            </tr>
+        `).join('');
+    } else {
+        body.innerHTML = '<tr><td colspan="6" class="text-muted">No maintenance records</td></tr>';
+    }
+}
+
+async function completeMaintenance(id) {
+    await fetch(`${API_BASE}/api/maintenance/${id}/complete`, { method: 'POST' });
+    loadMaintenance();
+}
+
+// ============================================================
+// ANALYTICS
+// ============================================================
+async function loadAnalytics() {
+    const data = await fetchAPI(`${API_BASE}/api/analytics/dashboard`);
+    const vehicles = await fetchAPI(`${API_BASE}/api/fleet/vehicles`);
+    const drivers = await fetchAPI(`${API_BASE}/api/fleet/drivers`);
+    
+    if (data) {
+        document.getElementById('anaUtilization').textContent = (data.fleetUtilization || 0) + '%';
+        document.getElementById('anaCost').textContent = '₹' + (data.operationalCost || 0);
+    }
+    if (vehicles) {
+        document.getElementById('anaVehicles').textContent = vehicles.length || 0;
+    }
+    if (drivers) {
+        document.getElementById('anaDrivers').textContent = drivers.length || 0;
+    }
+    loadROI();
+}
+
+async function loadROI() {
+    const data = await fetchAPI(`${API_BASE}/api/analytics/dashboard`);
+    const body = document.getElementById('roiTableBody');
+    if (data && data.vehicleROI && data.vehicleROI.length > 0) {
+        body.innerHTML = data.vehicleROI.map(v => `
+            <tr>
+                <td><strong>${v.vehicle || 'N/A'}</strong></td>
+                <td>₹${v.revenue || 0}</td>
+                <td>₹${v.totalCost || 0}</td>
+                <td>${v.roi || 0}%</td>
+            </tr>
+        `).join('');
+    } else {
+        body.innerHTML = '<tr><td colspan="4" class="text-muted">No ROI data available</td></tr>';
+    }
+}
+
+async function exportCSV() {
+    try {
+        const res = await fetch(`${API_BASE}/api/analytics/export/csv`);
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'analytics_report.csv';
+        a.click();
+    } catch (e) {
+        alert('Export failed.');
+    }
+}
+
+// ============================================================
+// COMPLIANCE
+// ============================================================
+async function loadCompliance() {
+    const drivers = await fetchAPI(`${API_BASE}/api/fleet/drivers`);
+    if (drivers && drivers.length > 0) {
+        const total = drivers.length;
+        const expiring = drivers.filter(d => {
+            const expiry = new Date(d.licenseExpiryDate);
+            const now = new Date();
+            const diff = (expiry - now) / (1000 * 60 * 60 * 24);
+            return diff < 30 && diff > 0;
+        }).length;
+        const suspended = drivers.filter(d => d.status === 'SUSPENDED').length;
+        const avgSafety = drivers.reduce((sum, d) => sum + (d.safetyScore || 0), 0) / total || 0;
+
+        document.getElementById('compTotalDrivers').textContent = total;
+        document.getElementById('compExpiring').textContent = expiring;
+        document.getElementById('compSuspended').textContent = suspended;
+        document.getElementById('compAvgSafety').textContent = Math.round(avgSafety) + '%';
+
+        const body = document.getElementById('complianceTableBody');
+        body.innerHTML = drivers.map(d => `
+            <tr>
+                <td><strong>${d.name}</strong></td>
+                <td>${d.licenseNumber}</td>
+                <td>${d.licenseExpiryDate || 'N/A'}</td>
+                <td>${d.safetyScore || 100}%</td>
+                <td><span class="status-badge ${(d.status || 'available').toLowerCase().replace(' ', '')}">${d.status || 'AVAILABLE'}</span></td>
+            </tr>
+        `).join('');
+    } else {
+        document.getElementById('complianceTableBody').innerHTML = '<tr><td colspan="5" class="text-muted">No drivers found</td></tr>';
+    }
+}
+
+// ============================================================
+// FUEL & EXPENSES
+// ============================================================
+async function loadFuelLogs() {
+    try {
+        const fuelLogs = await fetchAPI(`${API_BASE}/api/fuel/logs`);
+        const expenses = await fetchAPI(`${API_BASE}/api/fuel/expenses`);
+        
+        let totalFuel = 0, totalExpenses = 0;
+        const body = document.getElementById('fuelTableBody');
+        
+        if (fuelLogs && fuelLogs.length > 0) {
+            totalFuel = fuelLogs.reduce((sum, f) => sum + (f.cost || 0), 0);
+            body.innerHTML = fuelLogs.map(f => `
+                <tr>
+                    <td>Vehicle ${f.vehicleId}</td>
+                    <td>${f.liters || 0} L</td>
+                    <td>₹${f.cost || 0}</td>
+                    <td>${f.date || 'N/A'}</td>
+                </tr>
+            `).join('');
+        } else {
+            body.innerHTML = '<tr><td colspan="4" class="text-muted">No fuel logs found</td></tr>';
+        }
+
+        if (expenses) {
+            totalExpenses = expenses.reduce((sum, e) => sum + (e.amount || 0), 0);
+        }
+
+        document.getElementById('fuelTotalCost').textContent = '₹' + totalFuel;
+        document.getElementById('fuelTotalExpenses').textContent = '₹' + totalExpenses;
+        document.getElementById('fuelOpCost').textContent = '₹' + (totalFuel + totalExpenses);
+    } catch (e) {
+        console.error('Fuel logs error:', e);
+    }
+}
+
+// ============================================================
+// MODAL
+// ============================================================
+let modalType = '';
+
+function openModal(type) {
+    modalType = type;
+    const modal = document.getElementById('modal');
+    modal.classList.add('show');
+    const title = document.getElementById('modalTitle');
+    const body = document.getElementById('modalBody');
+
+    const templates = {
+        vehicle: {
+            title: 'Add Vehicle',
+            fields: `
+                <div class="field"><label>Registration Number</label><input id="modalReg" placeholder="e.g., 6J01AB4521"></div>
+                <div class="field"><label>Name</label><input id="modalName" placeholder="e.g., VAN-05"></div>
+                <div class="field"><label>Type</label><select id="modalType"><option value="VAN">Van</option><option value="TRUCK">Truck</option><option value="MINI">Mini</option></select></div>
+                <div class="field"><label>Max Load Capacity (kg)</label><input id="modalCapacity" type="number" placeholder="500"></div>
+            `
+        },
+        driver: {
+            title: 'Add Driver',
+            fields: `
+                <div class="field"><label>Name</label><input id="modalName" placeholder="Full name"></div>
+                <div class="field"><label>License Number</label><input id="modalLicense" placeholder="e.g., DL-8842B"></div>
+                <div class="field"><label>License Expiry Date</label><input id="modalExpiry" type="date"></div>
+                <div class="field"><label>Contact Number</label><input id="modalContact" placeholder="9876543210"></div>
+            `
+        },
+        maintenance: {
+            title: 'Add Maintenance',
+            fields: `
+                <div class="field"><label>Vehicle ID</label><input id="modalVehicleId" type="number" placeholder="Vehicle ID"></div>
+                <div class="field"><label>Type</label><input id="modalType" placeholder="e.g., Oil Change"></div>
+                <div class="field"><label>Description</label><input id="modalDesc" placeholder="Description"></div>
+                <div class="field"><label>Date</label><input id="modalDate" type="date"></div>
+                <div class="field"><label>Cost</label><input id="modalCost" type="number" placeholder="0"></div>
+            `
+        },
+        fuel: {
+            title: 'Add Fuel Log',
+            fields: `
+                <div class="field"><label>Vehicle ID</label><input id="modalVehicleId" type="number" placeholder="Vehicle ID"></div>
+                <div class="field"><label>Liters</label><input id="modalLiters" type="number" placeholder="0"></div>
+                <div class="field"><label>Cost</label><input id="modalCost" type="number" placeholder="0"></div>
+                <div class="field"><label>Date</label><input id="modalDate" type="date"></div>
+            `
+        }
+    };
+
+    const t = templates[type];
+    if (!t) return;
+    title.textContent = t.title;
+    body.innerHTML = t.fields;
+    document.getElementById('modalSubmit').onclick = () => submitModal(type);
+}
+
+function closeModal() {
+    document.getElementById('modal').classList.remove('show');
+}
+
+async function submitModal(type) {
+    let data = {};
+    switch(type) {
+        case 'vehicle':
+            data = {
+                registrationNumber: document.getElementById('modalReg').value,
+                name: document.getElementById('modalName').value,
+                type: document.getElementById('modalType').value,
+                maxLoadCapacity: parseFloat(document.getElementById('modalCapacity').value)
+            };
+            await postAPI(`${API_BASE}/api/fleet/vehicles`, data);
+            closeModal();
+            loadVehicles();
+            break;
+        case 'driver':
+            data = {
+                name: document.getElementById('modalName').value,
+                licenseNumber: document.getElementById('modalLicense').value,
+                licenseExpiryDate: document.getElementById('modalExpiry').value,
+                contactNumber: document.getElementById('modalContact').value
+            };
+            await postAPI(`${API_BASE}/api/fleet/drivers`, data);
+            closeModal();
+            loadDrivers();
+            break;
+        case 'maintenance':
+            data = {
+                vehicleId: parseInt(document.getElementById('modalVehicleId').value),
+                type: document.getElementById('modalType').value,
+                description: document.getElementById('modalDesc').value,
+                date: document.getElementById('modalDate').value,
+                cost: parseFloat(document.getElementById('modalCost').value)
+            };
+            await postAPI(`${API_BASE}/api/maintenance`, data);
+            closeModal();
+            loadMaintenance();
+            break;
+        case 'fuel':
+            data = {
+                vehicleId: parseInt(document.getElementById('modalVehicleId').value),
+                liters: parseFloat(document.getElementById('modalLiters').value),
+                cost: parseFloat(document.getElementById('modalCost').value),
+                date: document.getElementById('modalDate').value
+            };
+            await postAPI(`${API_BASE}/api/fuel/logs`, data);
+            closeModal();
+            loadFuelLogs();
+            break;
+    }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.getElementById('loginPage').style.display = 'flex';
+document.getElementById('appPage').style.display = 'none';
+
+console.log('🚀 TransitOps - Role-Based Access Control');
+console.log('📧 fleet@transitops.in / fleet123 - Fleet Manager');
+console.log('📧 dispatch@transitops.in / dispatch123 - Dispatcher');
+console.log('📧 safety@transitops.in / safety123 - Safety Officer');
+console.log('📧 finance@transitops.in / finance123 - Financial Analyst');
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+﻿CREATE DATABASE IF NOT EXISTS transitops;
+USE transitops;
+
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    department VARCHAR(100),
+    enabled BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE vehicles (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    registration_number VARCHAR(20) UNIQUE NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    model VARCHAR(100),
+    type VARCHAR(20),
+    max_load_capacity DECIMAL(10,2),
+    odometer DECIMAL(10,2) DEFAULT 0,
+    acquisition_cost DECIMAL(15,2),
+    status VARCHAR(20) DEFAULT 'AVAILABLE',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE drivers (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    license_number VARCHAR(50) UNIQUE NOT NULL,
+    license_category VARCHAR(20),
+    license_expiry_date DATE NOT NULL,
+    contact_number VARCHAR(20),
+    safety_score INT DEFAULT 100,
+    status VARCHAR(20) DEFAULT 'AVAILABLE',
+    trips_completed INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE trips (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    trip_id VARCHAR(20) UNIQUE NOT NULL,
+    source VARCHAR(200) NOT NULL,
+    destination VARCHAR(200) NOT NULL,
+    cargo_weight DECIMAL(10,2),
+    planned_distance DECIMAL(10,2),
+    actual_distance DECIMAL(10,2),
+    vehicle_id BIGINT,
+    driver_id BIGINT,
+    status VARCHAR(20) DEFAULT 'DRAFT',
+    revenue DECIMAL(15,2) DEFAULT 0,
+    dispatched_at TIMESTAMP,
+    completed_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE maintenance (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    vehicle_id BIGINT NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    description TEXT,
+    date DATE NOT NULL,
+    cost DECIMAL(10,2),
+    status VARCHAR(20) DEFAULT 'ACTIVE',
+    completed_at DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
